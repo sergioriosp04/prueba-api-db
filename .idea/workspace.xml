@@ -115,6 +115,7 @@
       <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
       <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
       <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="ProjectId" id="1XpEZigKJZ4nyItEj5CmTJ2IH0p" />
@@ -153,7 +154,7 @@
       <option name="presentableId" value="Default" />
       <updated>1581734692459</updated>
       <workItem from="1581734694122" duration="12805000" />
-      <workItem from="1581777938259" duration="7494000" />
+      <workItem from="1581777938259" duration="16518000" />
     </task>
     <servers />
   </component>
