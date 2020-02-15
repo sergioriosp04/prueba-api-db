@@ -18,3 +18,4 @@ Route::post('/registro', 'UserController@registro');
 
 //RUTAS BILLETERA
 Route::post('/consultar', 'BilleteraController@consultar');
+Route::post('/recargar', 'BilleteraController@recargar');
