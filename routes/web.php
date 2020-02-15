@@ -17,3 +17,4 @@ Route::get('/test', 'UserController@testOrm');
 Route::post('/registro', 'UserController@registro');
 
 //RUTAS BILLETERA
+Route::post('/consultar', 'BilleteraController@consultar');

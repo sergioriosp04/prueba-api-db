@@ -9,14 +9,13 @@ use App\Billetera;
 
 class UserController extends Controller
 {
-    public function testOrm(){
+    /*public function testOrm(){
         //$user = User::all()->load('billetera');
         $billetera = Billetera::where('id', '1')->first();
         //$userBilletera = User::where('documento', '71113528')->first();
         dd($billetera);
         return response()->json($userBilletera);
-
-    }
+    }*/
 
     public function registro(Request $request){
 
@@ -31,13 +30,13 @@ class UserController extends Controller
             $validator = \Validator::make($params_array, [
                 'nombre' => 'required|alpha',
                 'email'=> 'required|email|unique:users,email',
-                'celular' => 'required|numeric||digits:10|unique:users,celular',
+                'celular' => 'required|numeric|digits:10|unique:users,celular',
                 'documento' => 'required|numeric|unique:users,documento'
             ]);
 
             if($validator->fails()){
                 $data = [
-                    'success' => 'error',
+                    'status' => 'error',
                     'code' => 400,
                     'message' => $validator->errors()
                 ];
@@ -55,9 +54,10 @@ class UserController extends Controller
                 $billetera = new Billetera();
                 $billetera->user_id = $userBilletera['id'];
                 $billetera->saldo = 0;
+                $billetera->save();
 
                 $data = [
-                    'success' => 'success',
+                    'status' => 'success',
                     'code' => 200,
                     'message' => 'Se guardaron los datos con exito',
                     'user' => $user,
@@ -66,7 +66,7 @@ class UserController extends Controller
             }
         }else{
             $data = [
-                'success' => 'error',
+                'status' => 'error',
                 'code' => 400,
                 'message' => 'no se enviaron datos o son incorrectos'
             ];
