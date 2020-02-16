@@ -138,7 +138,7 @@ class BilleteraController extends Controller
             $validator = \Validator::make($params_array,[
                 'documento' => 'required|numeric|min:99999',
                 'celular' => 'required|numeric|digits:10',
-                'pagar' => 'required|numeric|min:10000|max:500000'
+                'pagar' => 'required|numeric|min:3000|max:500000'
             ]);
 
             if($validator->fails()){
@@ -169,7 +169,7 @@ class BilleteraController extends Controller
                     $pagar = $params_array['pagar'];
 
                     if($saldo >= $pagar){
-                        //enviar comprobantes a email
+                        //enviar comprobantes
                         $token = bin2hex(random_bytes(3));
                         $new_token = new Token();
                         $new_token->user_id = $user['id'];
@@ -179,6 +179,7 @@ class BilleteraController extends Controller
                             'sub' => $user['id'],
                             'documento' => $params_array['documento'],
                             'celular' => $params_array['celular'],
+                            'pagar' => $params_array['pagar'],
                             'iar' => time(),
                             'exp' => time() + (60 * 15)
                         ];
@@ -193,6 +194,7 @@ class BilleteraController extends Controller
                             'status' => 'success',
                             'code' => 200,
                             'message' => 'Pago: falta por confirmar',
+                            'message2' => ' si tenia otro pago por confirmar se elima el anterior, y se crea este nuevo',
                             'token' => $token,
                             'id_session' => $id_session
                         ];
@@ -218,7 +220,71 @@ class BilleteraController extends Controller
     }
 
     public function confirmar(Request $request){
-        $jwt = $request->header('Auth');
-        $id_session = JWT::decode($jwt, 'llave', 'HS256');
+        $jwt = $request->header('Authorization');
+        $json = $request->input('json', null);
+        $params = json_decode($json);
+        $params_array = json_decode($json, true);
+
+        if(!empty($params_array) && !empty($jwt)){
+            $validator = \Validator::make($params_array,[
+                'token' => 'required|size:6'
+            ]);
+            if($validator->fails()){
+                $data = [
+                    'status' => 'error',
+                    'code' => 400,
+                    'message' => $validator->errors()
+                ];
+            }else{
+                $verificar = Token::where('token', $params_array['token'])->first();
+                if(is_null($verificar)){
+                    $data = [
+                        'status' => 'error',
+                        'code' => 400,
+                        'message' => 'el token enviado no existe o ya fue utilizado'
+                    ];
+                }else{
+                    try {
+                        $id_session = JWT::decode($jwt, 'llave', array('HS256'));
+                    }catch (\UnexpectedValueException $e){
+                        $data = [
+                            'status' => 'error',
+                            'code' => 400,
+                            'message' => ' error al desencriptar el jwt. ya expiro'
+                        ];
+                    }catch (\DomainException $e){
+                        $data = [
+                            'status' => 'error',
+                            'code' => 400,
+                            'message' => ' error al desencriptar el jwt. ya expiro'
+                        ];
+                    }
+                    $billetera_user_id = $id_session->sub;
+                    $billetera_user = Billetera::where('user_id', $billetera_user_id)->first();
+                    $saldo = (int) $billetera_user['saldo'];
+                    $pagar = $id_session->pagar;
+                    $descuento = $saldo - $pagar;
+                    $billetera = new Billetera();
+                    $billetera->saldo = $descuento;
+                    Token::where('user_id', $billetera_user_id)->delete();
+                    Billetera::where('user_id', $billetera_user_id)->update(['saldo' => $descuento]);
+                    $data=[
+                        'status' => 'success',
+                        'code' => 200,
+                        'message' => ' Pago realizado con exito '
+                    ];
+                }
+            }
+
+        }else{
+            $data = [
+                'status' => 'error',
+                'code' => 400,
+                'message' => 'no se envio el token o el id de session'
+            ];
+        }
+
+
+        return response()->json($data, $data['code']);
     }
 }
