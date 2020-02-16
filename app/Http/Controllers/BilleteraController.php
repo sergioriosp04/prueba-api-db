@@ -170,6 +170,13 @@ class BilleteraController extends Controller
 
                     if($saldo >= $pagar){
                         //enviar comprobantes
+                        $token_existente = Token::where('user_id',$billetera_user_id)->first();
+                        if(!is_null($token_existente)){
+                            Token::where('user_id',$billetera_user_id)->delete();
+                            $message = ', habia un proceso de pago anterior sin confirmar el cual fue eliminado';
+                        }else{
+                            $message = '';
+                        }
                         $token = bin2hex(random_bytes(3));
                         $new_token = new Token();
                         $new_token->user_id = $user['id'];
@@ -193,8 +200,7 @@ class BilleteraController extends Controller
                         $data = [
                             'status' => 'success',
                             'code' => 200,
-                            'message' => 'Pago: falta por confirmar',
-                            'message2' => ' si tenia otro pago por confirmar se elima el anterior, y se crea este nuevo',
+                            'message' => 'Pago: falta por confirmar '. $message,
                             'token' => $token,
                             'id_session' => $id_session
                         ];
