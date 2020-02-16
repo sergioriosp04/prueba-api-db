@@ -22,7 +22,6 @@ class UserController extends Controller
         $params = json_decode($json);
         $params_array = json_decode($json, true);*/
         $params_array = $request->input();
-        //dd($json);
 
         if(!empty($params_array)){
             //limpiar datos

@@ -13,9 +13,10 @@ use Firebase\JWT\JWT;
 class BilleteraController extends Controller
 {
     public function consultar(Request $request){
-        $json = $request->input('json', null);
+        /*$json = $request->input('json', null);
         $params = json_decode($json);
-        $params_array = json_decode($json, true);
+        $params_array = json_decode($json, true);*/
+        $params_array = $request->input();
 
         if(!empty($params_array)){
             $validator = \Validator::make($params_array,[
@@ -68,9 +69,11 @@ class BilleteraController extends Controller
     }
 
     public function recargar(Request $request){
-        $json = $request->input('json', null);
+        /*$json = $request->input('json', null);
         $params = json_decode($json);
-        $params_array = json_decode($json, true);
+        $params_array = json_decode($json, true);*/
+        $params_array = $request->input();
+
         if(!empty($params_array)){
             $validator = \Validator::make($params_array,[
                 'documento' => 'required|numeric|min:99999',
@@ -131,9 +134,11 @@ class BilleteraController extends Controller
     }
 
     public function pagar(Request $request){
-        $json = $request->input('json', null);
+        /*$json = $request->input('json', null);
         $params = json_decode($json);
-        $params_array = json_decode($json, true);
+        $params_array = json_decode($json, true);*/
+        $params_array = $request->input();
+
         if(!empty($params_array)){
             $validator = \Validator::make($params_array,[
                 'documento' => 'required|numeric|min:99999',
@@ -227,9 +232,10 @@ class BilleteraController extends Controller
 
     public function confirmar(Request $request){
         $jwt = $request->header('Authorization');
-        $json = $request->input('json', null);
+        /*$json = $request->input('json', null);
         $params = json_decode($json);
-        $params_array = json_decode($json, true);
+        $params_array = json_decode($json, true);*/
+        $params_array = $request->input();
 
         if(!empty($params_array) && !empty($jwt)){
             $validator = \Validator::make($params_array,[
