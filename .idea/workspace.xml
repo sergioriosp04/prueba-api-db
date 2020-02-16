@@ -128,7 +128,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../prueba-Backend" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -155,7 +155,7 @@
       <updated>1581734692459</updated>
       <workItem from="1581734694122" duration="12805000" />
       <workItem from="1581777938259" duration="20665000" />
-      <workItem from="1581876995537" duration="5906000" />
+      <workItem from="1581876995537" duration="11518000" />
     </task>
     <servers />
   </component>
@@ -163,6 +163,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="421" y="96" key="FileChooserDialogImpl" timestamp="1581889809654">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="421" y="96" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1581889809654" />
     <state x="337" y="165" key="com.intellij.ide.util.TipDialog" timestamp="1581876995927">
       <screen x="0" y="0" width="1280" height="680" />
     </state>

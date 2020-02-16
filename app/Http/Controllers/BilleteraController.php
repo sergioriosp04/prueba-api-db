@@ -290,7 +290,6 @@ class BilleteraController extends Controller
             ];
         }
 
-
         return response()->json($data, $data['code']);
     }
 }
