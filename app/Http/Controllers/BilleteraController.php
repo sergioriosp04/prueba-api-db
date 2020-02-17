@@ -109,14 +109,14 @@ class BilleteraController extends Controller
                     $old_saldo = $billetera_user['saldo'];
                     $old_saldo = (int) $old_saldo;
                     $params_array['saldo'] += $old_saldo;
-                    unset($params_array['documento']);
-                    unset($params_array['celular']);
-                    $new_billetera = Billetera::where('user_id', $billetera_user_id)->update($params_array);
+                    /*unset($params_array['documento']);
+                    unset($params_array['celular']);*/
+                    $new_billetera = Billetera::where('user_id', $billetera_user_id)->update(['saldo' => $params_array['saldo']]);
                     $new_billetera = Billetera::where('user_id', $billetera_user_id)->first();
                     $data = [
                         'status' => 'success',
                         'code' => 200,
-                        'message' => 'la consulta fue exitosa',
+                        'message' => 'la recarga fue exitosa',
                         'user' => $user,
                         'billetera' => $new_billetera
                     ];
@@ -237,6 +237,7 @@ class BilleteraController extends Controller
         $params_array = json_decode($json, true);*/
         $params_array = $request->input();
 
+
         if(!empty($params_array) && !empty($jwt)){
             $validator = \Validator::make($params_array,[
                 'token' => 'required|size:6'
@@ -257,6 +258,7 @@ class BilleteraController extends Controller
                     ];
                 }else{
                     try {
+                        //dd($jwt);
                         $id_session = JWT::decode($jwt, 'llave', array('HS256'));
                     }catch (\UnexpectedValueException $e){
                         $data = [
