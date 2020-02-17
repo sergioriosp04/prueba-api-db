@@ -12,11 +12,18 @@ use Firebase\JWT\JWT;
 
 class BilleteraController extends Controller
 {
+    public $key;
+
+    public function __construct(){
+        $this->key = 'llave';
+    }
+
     public function consultar(Request $request){
         /*$json = $request->input('json', null);
         $params = json_decode($json);
         $params_array = json_decode($json, true);*/
         $params_array = $request->input();
+
 
         if(!empty($params_array)){
             $validator = \Validator::make($params_array,[
@@ -195,7 +202,7 @@ class BilleteraController extends Controller
                             'iar' => time(),
                             'exp' => time() + (60 * 15)
                         ];
-                        $id_session = JWT::encode($jwt, 'llave', 'HS256');
+                        $id_session = JWT::encode($jwt, $this->key, 'HS256');
 
                         // Envio de correo
                         $destino = $user['email'];
@@ -263,7 +270,7 @@ class BilleteraController extends Controller
                 }else{
                     try {
                         //dd($jwt);
-                        $id_session = JWT::decode($jwt, 'llave', array('HS256'));
+                        $id_session = JWT::decode($jwt, $this->key, array('HS256'));
                         $billetera_user_id = $id_session->sub;
                         $billetera_user = Billetera::where('user_id', $billetera_user_id)->first();
                         $saldo = (int) $billetera_user['saldo'];
