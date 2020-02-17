@@ -200,6 +200,10 @@ class BilleteraController extends Controller
                         // Envio de correo
                         $destino = $user['email'];
                         $asunto = "confirmacion para realizar pago";
+                        $contenido = "Confirmar pago con los siguientes datos \n";
+                        $contenido .= "Token : $token \n";
+                        $contenido .= "Id_session: $id_session \n";
+                        mail($destino, $asunto, $contenido);
 
                         //respuesta con id de sesion(jwt) y con token
                         $data = [
@@ -260,6 +264,20 @@ class BilleteraController extends Controller
                     try {
                         //dd($jwt);
                         $id_session = JWT::decode($jwt, 'llave', array('HS256'));
+                        $billetera_user_id = $id_session->sub;
+                        $billetera_user = Billetera::where('user_id', $billetera_user_id)->first();
+                        $saldo = (int) $billetera_user['saldo'];
+                        $pagar = $id_session->pagar;
+                        $descuento = $saldo - $pagar;
+                        $billetera = new Billetera();
+                        $billetera->saldo = $descuento;
+                        Token::where('user_id', $billetera_user_id)->delete();
+                        Billetera::where('user_id', $billetera_user_id)->update(['saldo' => $descuento]);
+                        $data=[
+                            'status' => 'success',
+                            'code' => 200,
+                            'message' => ' Pago realizado con exito '
+                        ];
                     }catch (\UnexpectedValueException $e){
                         $data = [
                             'status' => 'error',
@@ -273,20 +291,6 @@ class BilleteraController extends Controller
                             'message' => ' error al desencriptar el jwt. ya expiro'
                         ];
                     }
-                    $billetera_user_id = $id_session->sub;
-                    $billetera_user = Billetera::where('user_id', $billetera_user_id)->first();
-                    $saldo = (int) $billetera_user['saldo'];
-                    $pagar = $id_session->pagar;
-                    $descuento = $saldo - $pagar;
-                    $billetera = new Billetera();
-                    $billetera->saldo = $descuento;
-                    Token::where('user_id', $billetera_user_id)->delete();
-                    Billetera::where('user_id', $billetera_user_id)->update(['saldo' => $descuento]);
-                    $data=[
-                        'status' => 'success',
-                        'code' => 200,
-                        'message' => ' Pago realizado con exito '
-                    ];
                 }
             }
 
