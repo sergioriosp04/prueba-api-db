@@ -3,10 +3,10 @@ USE prueba;
 
 CREATE TABLE users(
     id      int(11) auto_increment not null,
-    documento   int(20) not null,
+    documento   int(255) not null,
     nombre      varchar(255) not null,
     email       varchar(255) not null,
-    celular     int(20) not null,
+    celular     int(255) not null,
     created_at  datetime,
     updated_at  datetime,
     remember_token  varchar(255),
