@@ -1,5 +1,6 @@
 <h1> Esta es la api que guarda en la base de datos. <h1>
 
+El archivo en la raiz database.sql contiene el codigo SQL para crear las bases de datos necesarias para el funcionamiento de esta
 
 ---------------------------------------------------------------------------------------------------------------------------------
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
